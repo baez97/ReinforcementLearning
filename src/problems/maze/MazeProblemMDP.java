@@ -73,8 +73,10 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
         // COMPLETAR
         // 
         MazeState mazeState = (MazeState) state;
-        int lastCell = this.maze.size -1;
-        return mazeState.X() == lastCell && mazeState.Y() == lastCell;
+        boolean cheese = mazeState.position.equals(this.maze.posCheese);
+        boolean cat    = this.maze.posCats.contains(mazeState.position);
+        
+        return cheese || cat;
     }
     
     /**
