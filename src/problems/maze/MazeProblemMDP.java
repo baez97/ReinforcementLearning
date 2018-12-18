@@ -100,11 +100,22 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
     @Override
     public double getReward(State state) {
         double reward = 0;
-
+        
         //
         // COMPLETAR
         // 
         // Otherwise returns 0
+        
+        MazeState mazeState = (MazeState) state;
+        boolean cheese = mazeState.position.equals(this.maze.posCheese);
+        boolean cat    = this.maze.posCats.contains(mazeState.position);
+        
+        if ( cheese ) {
+            return  100.0;
+        } else if ( cat ) {
+            return -100.0;
+        }
+        
         return 0;
     }
 
