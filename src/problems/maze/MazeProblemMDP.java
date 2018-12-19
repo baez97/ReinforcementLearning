@@ -142,27 +142,35 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
      */
     @Override
     public double getTransitionReward(State fromState, Action action, State toState) {
+        int toX,toY;
+        toX = ((MazeState) toState).X();
+        toY = ((MazeState) toState).Y();	
 
-        double reward = 1.0;
+        // Si no hay transición, devuelve 0
+        if ((fromState==null) || (toState==null))
+                return 0;
 
-        //
-        // COMPLETAR
-        // 
-        // Returns the reward
-        
-        MazeState fromMazeState = (MazeState) fromState;
-        MazeState toMazeState   = (MazeState) toState;
+        // Primero penaliza la distancia
+        int fromX,fromY;
+        fromX = ((MazeState) fromState).X();
+        fromY = ((MazeState) fromState).Y();
 
-        int originCell = this.maze.cells[fromMazeState.X()][fromMazeState.Y()];
-        int finalCell  = this.maze.cells[toMazeState.X()][toMazeState.Y()];
-        
-        if ( originCell == Maze.WATER ) {
-            return 2.0;
-        } else if ( originCell == Maze.HOLE ) {
-            return 0.5;
-        }
-        
-        return reward;
+        // Calcula la distancia euclediana (Teorema de Pitágoras)
+        double distancia = Math.sqrt(Math.pow(fromX-toX, 2) + Math.pow(fromY-toY, 2));
+
+        // Calcula la recompensa.
+        double recompensa = -1*distancia;
+
+        // Si el estado actual es agua, la recompensa se duplica
+        if (maze.cells[fromY][fromX]==Maze.WATER)
+                recompensa = recompensa*2;
+
+        // Si es un tunel y la acción es DIVE, la recompensa es la mitad
+        if (action==MazeAction.DIVE)
+                recompensa = recompensa*0.5;
+
+        // Devuelve la recompensa
+        return recompensa;
     }
 
     // From MDPLearningProblem
