@@ -183,6 +183,15 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
         //
         // COMPLETAR
         // 
+        
+        for ( int i = 0; i < maze.size; i++ ) {
+            for ( int j = 0; j < maze.size; j++ ) {
+                if ( maze.cells[i][j] != Maze.WALL ) {
+                    allStates.add(new MazeState(i, j));
+                }
+            }  
+        }
+        
         return allStates;
     }
 
