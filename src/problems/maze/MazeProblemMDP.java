@@ -89,7 +89,25 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
         //
         // COMPLETAR
         // 
-
+        int fromY = mazeState.Y();
+        int fromX = mazeState.X();
+        
+        if ( (maze.holeList.contains(mazeState.position)) ) {
+            possibleActions.add(MazeAction.DIVE);
+        }
+        if ( (fromY > 0) && (maze.cells[fromX][fromY - 1] != Maze.WALL) ) {
+            possibleActions.add(MazeAction.UP);	           
+        }
+        if ( (fromY < maze.size - 1) && (maze.cells[fromX][fromY + 1] != Maze.WALL) ) {
+            possibleActions.add(MazeAction.DOWN);       
+        }
+        if ( (fromX > 0) && (maze.cells[fromX - 1][fromY] != Maze.WALL) ) {
+            possibleActions.add(MazeAction.LEFT);       
+        }
+        if ( (fromX < maze.size - 1) && (maze.cells[fromX + 1][fromY] != Maze.WALL) ) {
+            possibleActions.add(MazeAction.RIGHT);
+        }
+        
         // Returns the actions.
         return possibleActions;
     }
@@ -125,12 +143,25 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
     @Override
     public double getTransitionReward(State fromState, Action action, State toState) {
 
-        double reward = 0;
+        double reward = 1.0;
 
         //
         // COMPLETAR
         // 
         // Returns the reward
+        
+        MazeState fromMazeState = (MazeState) fromState;
+        MazeState toMazeState   = (MazeState) toState;
+
+        int originCell = this.maze.cells[fromMazeState.X()][fromMazeState.Y()];
+        int finalCell  = this.maze.cells[toMazeState.X()][toMazeState.Y()];
+        
+        if ( originCell == Maze.WATER ) {
+            return 2.0;
+        } else if ( originCell == Maze.HOLE ) {
+            return 0.5;
+        }
+        
         return reward;
     }
 
@@ -151,10 +182,7 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
      * Provides access to the action transition model for a pair state/action
      */
     public StateActionTransModel getTransitionModel(State state, Action action) {
-        //
-        // COMPLETAR
-        // 
-        return null;
+        return this.mazeTransitionModel(state, action);
     }
 
     /**
