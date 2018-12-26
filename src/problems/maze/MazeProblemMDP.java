@@ -117,12 +117,9 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
      */
     @Override
     public double getReward(State state) {
-        double reward = 0;
-        
         //
         // COMPLETAR
         // 
-        // Otherwise returns 0
         
         MazeState mazeState = (MazeState) state;
         boolean cheese = mazeState.position.equals(this.maze.posCheese);
@@ -134,6 +131,7 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
             return -100.0;
         }
         
+        // Otherwise returns 0
         return 0;
     }
 
@@ -148,7 +146,7 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
 
         // Si no hay transición, devuelve 0
         if ((fromState==null) || (toState==null))
-                return 0;
+            return 0;
 
         // Primero penaliza la distancia
         int fromX,fromY;
@@ -162,7 +160,7 @@ public class MazeProblemMDP extends MDPLearningProblem implements MazeProblem, P
         double recompensa = -1*distancia;
 
         // Si el estado actual es agua, la recompensa se duplica
-        if (maze.cells[fromY][fromX]==Maze.WATER)
+        if (maze.cells[fromX][fromY]==Maze.WATER)
                 recompensa = recompensa*2;
 
         // Si es un tunel y la acción es DIVE, la recompensa es la mitad

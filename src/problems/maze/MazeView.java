@@ -30,11 +30,14 @@ public class MazeView extends ProblemView{
 	private static Color waterColor = new Color(34, 79, 189);
 	
 	// Images
-	public static final Image hamster = Toolkit.getDefaultToolkit().getImage("problems/maze/imgs/hamster.png");
-	public static final Image cheese = Toolkit.getDefaultToolkit().getImage("problems/maze/imgs/queso.png");	
-	public static final Image cat = Toolkit.getDefaultToolkit().getImage("problems/maze/imgs/cat.png");
-	public static final Image cat2 = Toolkit.getDefaultToolkit().getImage("problems/maze/imgs/cat2.png");
-	BufferedImage mazeImage;											// Image of the maze
+        
+        final static String RUTA = "/Users/josemanuelbaezsoriano/NetBeansProjects/Practica2/src/problems/maze/imgs/";
+        
+	public static final Image hamster = Toolkit.getDefaultToolkit().getImage(RUTA + "hamster.png");
+	public static final Image cheese = Toolkit.getDefaultToolkit().getImage(RUTA + "queso.png");	
+	public static final Image cat = Toolkit.getDefaultToolkit().getImage(RUTA + "cat.png");
+	public static final Image cat2 = Toolkit.getDefaultToolkit().getImage(RUTA + "cat2.png");
+	BufferedImage mazeImage;                                                // Image of the maze
 	Image scaledHamster, scaledCheese, scaledCat, scaledCat2;		// Scaled images
 	
 	// Maze 	
@@ -68,7 +71,7 @@ public class MazeView extends ProblemView{
 		this.sizePx = sizePx;		
 		// Calculates dimensions
 		cellSizePx = (sizePx-(2*marginPx)) / this.maze.size;
-		speedPx = 1*((cellSizePx)/10);	                          // (Two cells/second)
+		speedPx = ((cellSizePx)/10);	                          // (Two cells/second)
 		
 		// Scales the images according to the size
 		scaledHamster = hamster.getScaledInstance((int)(cellSizePx*0.5), (int)(cellSizePx*0.5), Image.SCALE_SMOOTH);

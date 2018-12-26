@@ -72,7 +72,11 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
         //
         // COMPLETAR
         // 
-        return false; // Quitar
+        MazeState mazeState = (MazeState) state;
+        boolean cheese = mazeState.position.equals(this.maze.posCheese);
+        boolean cat = this.maze.posCats.contains(mazeState.position);
+
+        return cheese || cat;
     }
 
     /**
@@ -85,6 +89,15 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
         //
         // COMPLETAR
         // 
+
+        possibleActions.add(MazeAction.UP);
+        possibleActions.add(MazeAction.RIGHT);
+        possibleActions.add(MazeAction.DOWN);
+        possibleActions.add(MazeAction.LEFT);
+        
+        if ( this.maze.holeList.contains(mazeState.position) ) {
+            possibleActions.add(MazeAction.DIVE);
+        }
 
         // Returns the actions.
         return possibleActions;
@@ -100,6 +113,17 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
         //
         // COMPLETAR
         // 
+        
+        MazeState mazeState = (MazeState) state;
+        boolean cheese = mazeState.position.equals(this.maze.posCheese);
+        boolean cat    = this.maze.posCats.contains(mazeState.position);
+        
+        if ( cheese ) {
+            return  100.0;
+        } else if ( cat ) {
+            return -100.0;
+        }
+        
         // Otherwise returns 0
         return 0;
     }
@@ -109,20 +133,44 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
      */
     @Override
     public double getTransitionReward(State fromState, Action action, State toState) {
-
-        double reward = 0;
-
         //
         // COMPLETAR
         // 
-        // Returns the reward
-        return reward;
+        
+        int toX,toY;
+        toX = ((MazeState) toState).X();
+        toY = ((MazeState) toState).Y();	
+
+        // Si no hay transición, devuelve 0
+        if ((fromState==null) || (toState==null))
+            return 0;
+
+        // Primero penaliza la distancia
+        int fromX,fromY;
+        fromX = ((MazeState) fromState).X();
+        fromY = ((MazeState) fromState).Y();
+
+        // Calcula la distancia euclediana (Teorema de Pitágoras)
+        double distancia = Math.sqrt(Math.pow(fromX-toX, 2) + Math.pow(fromY-toY, 2));
+
+        // Calcula la recompensa.
+        double recompensa = -1*distancia;
+
+        // Si el estado actual es agua, la recompensa se duplica
+        if (maze.cells[fromX][fromY]==Maze.WATER)
+                recompensa = recompensa*2;
+
+        // Si es un tunel y la acción es DIVE, la recompensa es la mitad
+        if (action==MazeAction.DIVE)
+                recompensa = recompensa*0.5;
+
+        // Devuelve la recompensa
+        return recompensa;
     }
 
-    // From MFLearningProblem
     /**
      * Generates the transition model for a certain state in this particular
-     * problem. Assumes that the action can be applied. This method is PRIVATE.
+     * problem. This method is PRIVATE.
      */
     private StateActionTransModel mazeTransitionModel(State state, Action action) {
         // Structures contained by the transition model.
@@ -241,7 +289,10 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
     public void updateEnvironment(State state, Action action) {
         //
         // COMPLETAR
-        // 
+        //
+        
+        // No tiene que hacer nada puesto que en este caso el agente
+        // no modifica el entorno
     }
 
     /**
@@ -252,7 +303,9 @@ public class MazeProblemMF extends MFLearningProblem implements MazeProblem, Pro
         //
         // COMPLETAR
         // 
-        return null; // Quitar
+        
+        StateActionTransModel model = mazeTransitionModel(state, action);
+        return model.genNextState();
     }
 
     // Utilities

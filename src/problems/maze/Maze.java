@@ -117,7 +117,7 @@ public class Maze{
 						cells[posX][posY] = WALL;
 		
         // Holes 2% of the positions are holes.
-		numHoles = Math.max(2, (int) ((size*size)*0.02));
+		numHoles = Math.max(2, (int) ((size*size)*0.02)) +1;
 		holeList = new ArrayList<Position>();
 		for (int nHole=1; nHole<=numHoles-1; nHole++){
 			int holeX; int holeY;
